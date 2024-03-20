@@ -1,0 +1,95 @@
+@keyframes EffectDelTask {
+    0% {
+        color: inherit;
+    }
+    50% {
+        color: #ff0000;
+    }
+    100% {
+        color: inherit;
+    }
+}
+
+@keyframes EffectDelTodo {
+    0% {
+        color: #ff0000;
+    }
+    50% {
+        color: inherit;
+    }
+    100% {
+        color: #ff0000;
+    }
+
+}
+
+@keyframes EffectAddItem {
+    0% {
+        color: #ab01ab;
+    }
+    50% {
+        color: inherit;
+    }
+    100% {
+        color: #ab01ab;
+    }
+}
+
+@keyframes FadeOpacity {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+.deleteTaskCustomBtn:hover {
+    animation: EffectDelTask 1200ms Infinite;
+}
+
+.deleteTodoCustomBtn:hover {
+    animation: EffectDelTodo 1200ms Infinite;
+}
+
+.addItemCustomBtn:hover {
+    animation: EffectAddItem 1200ms Infinite;
+}
+
+.deleteTodoCustomBtn--warning {
+    animation: EffectDelTodo 1200ms Infinite;
+}
+
+.deleteTodoCustomBtn--alert:focus, .deleteTodoCustomBtn--alert:hover {
+    color: red;
+}
+
+.pagination {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    list-style: none;
+}
+
+.Todolist {
+    width: 100%;
+    max-width: 500px;
+
+}
+
+.Todolist--delete {
+    animation: FadeOpacity 1.6s ease forwards;
+}
+
+
+.checkbox {
+    width: 20px;
+    height: 20px;
+    background-color: red;
+}
+
+.checkbox--active {
+    width: 20px;
+    height: 20px;
+    background-color: green;
+}
