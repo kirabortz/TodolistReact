@@ -23,7 +23,10 @@ export const store = configureStore({
 })
 
 export type RootReducerType = ReturnType<typeof RootReducer>
-export type RootState = ReturnType<typeof store.getState>
-export type AppDispatch = typeof store.dispatch //для санок
-export const useAppDispatch: () => AppDispatch = useDispatch //для санок
-export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
+export type RootState = ReturnType<typeof store.getState> //типизация стейта
+export type AppDispatch = typeof store.dispatch //для санок типизация диспатча
+export const useAppDispatch: () => AppDispatch = useDispatch //для санок кастом для диспатча
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector //кастом для селектора
+
+// @ts-ignore
+window.store = store;

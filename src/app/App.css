@@ -44,6 +44,29 @@
     }
 }
 
+@keyframes FadeAds {
+    0% {
+        color: inherit;
+    }
+    50% {
+        color: #ffe341;
+    }
+    100% {
+        color: inherit;
+    }
+}
+
+.ads-btn{
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 25px;
+    font-weight: 800;
+    animation: FadeAds 2000ms Infinite;
+}
+
+
+
 .deleteTaskCustomBtn:hover {
     animation: EffectDelTask 1200ms Infinite;
 }

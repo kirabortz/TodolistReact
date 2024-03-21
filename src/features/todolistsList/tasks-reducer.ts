@@ -1,9 +1,16 @@
-import {addTodolist, deleteTodolist, isEntityStatus, setTodolists, TodolistsDomainType} from './todolists-reducer';
+import {
+    addTodolist,
+    deleteTodolist,
+    isEntityStatus,
+    resetData,
+    setTodolists,
+    TodolistsDomainType
+} from './todolists-reducer';
 
 
 import {Dispatch} from 'redux';
 import {TaskProps, TasksAPI, UpdateTaskModelProps} from '../../api/tasks-api';
-import {RootState} from '../../app/Store';
+import {AppDispatch, RootState} from '../../app/Store';
 import {RequestStatusType, setAppError, setAppStatus} from '../../app/app-reducer';
 import {ServerAppErrorHandle, ServerNetworkError} from '../../components/utils/error-utils';
 import {updateTaskModel} from '../../components/utils/updateItemModel';
@@ -36,13 +43,16 @@ export const tasksReducer = (state: InitialTasksState = initialState, action: Un
                     : task)
             }
 
-            case 'TOGGLE-ENTITY-STATUS':
-                return {
-                    ...state,
-                    [action.todoListId]: state[action.todoListId].map(task => task.id === action.taskId
-                        ? {...task, entityStatus:action.entityStatus}
-                        : task)
-                }
+        case 'TOGGLE-ENTITY-STATUS':
+            return {
+                ...state,
+                [action.todoListId]: state[action.todoListId].map(task => task.id === action.taskId
+                    ? {...task, entityStatus: action.entityStatus}
+                    : task)
+            }
+
+        case 'RESET-DATA':
+            return {}
 
         case 'TODOLIST/SET-TODOLISTS':
             return {
@@ -80,14 +90,15 @@ export const updateTask = (updatedTask: TaskProps) => {
     return {type: 'TASKS/UPDATE-TASK', updatedTask} as const
 }
 
-export const toggleEntityStatus = (todoListId:string,taskId:string, entityStatus: RequestStatusType) => {
-    return {type: 'TOGGLE-ENTITY-STATUS',todoListId,taskId, entityStatus} as const
+export const toggleEntityStatus = (todoListId: string, taskId: string, entityStatus: RequestStatusType) => {
+    return {type: 'TOGGLE-ENTITY-STATUS', todoListId, taskId, entityStatus} as const
 }
 
 
 //THUNK
 export const setTasksThunk = (todolistId: string) => async (dispatch: Dispatch<UnionTypes>) => {
     dispatch(setAppStatus('loading'))
+
     try {
         const res = await TasksAPI.getTasks(todolistId)
         if (res.data.error === null) {
@@ -96,14 +107,14 @@ export const setTasksThunk = (todolistId: string) => async (dispatch: Dispatch<U
         } else {
             ServerNetworkError({message: 'Some error occurred'}, dispatch)
         }
-    } catch (error:any ) {
-  
+    } catch (error: any) {
         ServerNetworkError(error.message, dispatch)
     }
 }
 
 export const addTaskThunk = (todolistId: string, title: string) => async (dispatch: Dispatch<UnionTypes>) => {
     dispatch(setAppStatus('loading'))
+
     try {
         const res = await TasksAPI.addTask(todolistId, title)
         if (res.data.resultCode === 0) {
@@ -112,7 +123,7 @@ export const addTaskThunk = (todolistId: string, title: string) => async (dispat
         } else {
             ServerAppErrorHandle(res.data, dispatch)
         }
-    } catch (error:any ) {
+    } catch (error: any) {
 
         ServerNetworkError(error.message, dispatch)
     }
@@ -128,13 +139,13 @@ export const deleteTaskThunk = (todolistId: string, taskId: string) => async (di
         } else {
             ServerAppErrorHandle(res.data, dispatch)
         }
-    } catch (error:any ) {
+    } catch (error: any) {
         ServerNetworkError(error.message, dispatch)
     }
 }
 
 
-export const updateTaskThunk = (todolistId: string, taskId: string, updatedKey: string, updatedParam: string | number) => async (dispatch: Dispatch, getState: () => RootState) => {
+export const updateTaskThunk = (todolistId: string, taskId: string, updatedKey: string, updatedParam: string | number) => async (dispatch: Dispatch<UnionTypes>, getState: () => RootState) => {
     dispatch(setAppStatus('loading'))
     dispatch(toggleEntityStatus(todolistId, taskId, 'loading'))
     try {
@@ -152,7 +163,7 @@ export const updateTaskThunk = (todolistId: string, taskId: string, updatedKey: 
         } else {
             alert('Task not found')
         }
-    } catch (error:any ) {
+    } catch (error: any) {
         ServerNetworkError(error.message, dispatch)
     }
 }
@@ -177,3 +188,4 @@ type UnionTypes = ReturnType<typeof setTasks>
     | ReturnType<typeof setAppError>
     | ReturnType<typeof updateTask>
     | ReturnType<typeof toggleEntityStatus>
+    | ReturnType<typeof resetData>

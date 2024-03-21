@@ -55,6 +55,7 @@ export const AddItemForm = memo((props: AddItemFormProps) => {
                        onChange={changeItemValueHandler}
                        onKeyUp={onKeyUpHandler}
                        onBlur={onBlurHandler}
+
             />
             <IconButton color="info"
                         onClick={addTaskHandler}

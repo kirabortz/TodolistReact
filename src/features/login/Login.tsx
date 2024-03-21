@@ -9,16 +9,23 @@ import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import {useFormik} from 'formik';
 import {login} from '../../api/auth-reducer';
-import {useAppDispatch} from '../../app/Store';
+import {useAppDispatch, useAppSelector} from '../../app/Store';
+import {Navigate} from "react-router-dom";
 
-type LoginPropsType = {}
+export type LoginType = {
+    email: string
+    password: string
+    rememberMe: boolean
+}
 type FormikErrorType = {
     email?: string
     password?: string
     rememberMe?: boolean
 }
-export const Login = React.memo((props: LoginPropsType) => {
+export const Login = React.memo(() => {
     const dispatch = useAppDispatch()
+    let isLoggedIn = useAppSelector(state => state.authReducer.isLoggedIn)
+
     const formik = useFormik({
         initialValues: {
             email: '',
@@ -43,6 +50,9 @@ export const Login = React.memo((props: LoginPropsType) => {
             formik.resetForm()
         },
     })
+    if (isLoggedIn) {
+        return <Navigate to={'/'}/>
+    }
     return (
         <Grid container justifyContent={'center'}>
             <Grid item justifyContent={'center'}>
@@ -63,7 +73,6 @@ export const Login = React.memo((props: LoginPropsType) => {
                             <TextField label="Email"
                                        margin="normal"
                                        {...formik.getFieldProps('email')}
-                                       onBlur={formik.handleBlur}
                             />
 
                             {formik.errors.email && formik.touched.email ? <div>{formik.errors.email}</div> : null}
@@ -71,16 +80,17 @@ export const Login = React.memo((props: LoginPropsType) => {
                                        label="Password"
                                        margin="normal"
                                        {...formik.getFieldProps('password')}
-                                       onBlur={formik.handleBlur}
                             />
-                            {formik.errors.password && formik.touched.password ?
-                                <div>{formik.errors.password}</div> : null}
+                            {formik.errors.password && formik.touched.password
+                                ? <div>{formik.errors.password}</div>
+                                : null
+                            }
                             <FormControlLabel label={'Remember me'}
                                               control={<Checkbox
-                                                  onChange={formik.handleChange}
                                                   checked={formik.values.rememberMe}
-                                                  name="rememberMe"/>}
-                                              onBlur={formik.handleBlur}
+                                                  {...formik.getFieldProps('rememberMe')}
+                                              />}
+                                              {...formik.getFieldProps('rememberMe')}
                             />
                             <Button type={'submit'}
                                     variant={'contained'}

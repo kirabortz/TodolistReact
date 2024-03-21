@@ -10,35 +10,34 @@ import {AddItemForm} from '../../components/addItemForm/AddItemForm';
 import {Pagination} from '../../components/paginate/Pagination';
 import {Todolist} from './todolist/Todolist';
 import {addTodolistThunk, getTodolistThunk, TodolistsDomainType} from './todolists-reducer';
-import {Navigate, useNavigate} from 'react-router-dom';
+import {Navigate} from 'react-router-dom';
 
 
 export const TodolistsList = () => {
     const dispatch = useAppDispatch()
 
-    let todolists: TodolistsDomainType[] = useAppSelector(() => store.getState().todolistsReducer);
-    let isLoggedIn = useAppSelector(state => state.authReducer.isLoggedIn)
+    const todolists: TodolistsDomainType[] = useAppSelector(() => store.getState().todolistsReducer);
+    const isLoggedIn = useAppSelector(state => state.authReducer.isLoggedIn)
 
     useEffect(() => {
-        if (!isLoggedIn) {
-            return
-        }
-        dispatch(getTodolistThunk)
+        if (!isLoggedIn) return
+        dispatch(getTodolistThunk())
     }, [])
 
     const [currentPage, setCurrentPage] = useState<number>(1);
 
-    const pageSize = 4
+    const pageSize = 3
 
     const changePageHandler = useCallback((page: number) => setCurrentPage(page), [currentPage])
 
     const addTodolistHandler = useCallback((title: string) => dispatch(addTodolistThunk(title)), [dispatch])
 
+
+
+    ///////////////////////////////////////////////ОТРИСОВКА//////////////////////////////////////
     if (!isLoggedIn) {
         return <Navigate to={'/login'} />
     }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////
 
     const todolistsCrop = (Paginate(todolists, currentPage, pageSize)).map((todolist: any) => {
         return <Grid item key={todolist.id}>
@@ -47,7 +46,6 @@ export const TodolistsList = () => {
             </Paper>
         </Grid>
     })
-
     return (
         <>
             <Grid container

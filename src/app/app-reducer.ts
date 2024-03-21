@@ -1,5 +1,6 @@
 import {AuthAPI} from '../api/auth-api';
 import {postUserAuthData, setAuthData} from '../api/auth-reducer';
+import {Dispatch} from "redux";
 
 let initialState = {
     status: 'loading' as RequestStatusType,
@@ -28,13 +29,14 @@ export const isInitialized = (value: boolean) =>
     ({type: 'APP/IS-INITIALIZED', value}) as const
 
 //THUNK
-export const initializeApp = () => (dispatch:any) => {
+export const initializeApp = () => (dispatch:Dispatch) => {
     AuthAPI.getAuthData().then(res => {
         if (res.data.resultCode === 0) {
             dispatch(postUserAuthData(true))
         } else {
         }
         dispatch(isInitialized(true))
+        dispatch(setAppStatus('succeeded'))
     })
 }
 

@@ -11,18 +11,20 @@ import {TodolistsList} from '../features/todolistsList/TodolistsList';
 import {Navigate, Route, Routes} from 'react-router-dom';
 import {Login} from '../features/login/Login';
 import {useAppDispatch, useAppSelector} from './Store';
-import {getAuth} from '../api/auth-reducer';
+import {initializeApp} from "./app-reducer";
+import {UnknownPage} from "../components/materialUI/UnknownPage";
 
 
 
 const App = () => {
     const dispatch = useAppDispatch()
     const isInitialized = useAppSelector(state => state.appReducer.isInitialized)
-    useEffect(()=>{
-        dispatch(getAuth())
-    },[dispatch])
 
-    if (isInitialized) {
+    useEffect(()=>{
+        dispatch(initializeApp())
+    },[])
+
+    if (!isInitialized) {
         return (
             <div style={{ position: 'fixed', top: '30%', textAlign: 'center', width: '100%' }}>
                 <CircularProgress />
@@ -33,9 +35,9 @@ const App = () => {
         <div className="App">
             <ErrorSnackBar />
             <AppHeader/>
-            <Container fixed style={{maxWidth: '100%'}}>
+            <Container fixed style={{ maxWidth: '100%'}} >
                 <Routes>
-                    <Route path="/404" element={<h1>404: PAGE NOT F1213131OUND</h1>} />
+                    <Route path="/404" element={<UnknownPage/>} />
                     <Route path="*" element={<Navigate to={'/404'}/>} />
 
                     <Route path="/" element={<TodolistsList />}/>

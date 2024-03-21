@@ -28,11 +28,6 @@ export const Todolist = memo((props: TodolistsDomainType) => {
 
     let tasks: TasksDomainType[] = useAppSelector(state => state.tasksReducer[props.id]);
 
-    useEffect(() => {
-        dispatch(setTasksThunk(props.id))
-    }, []);
-
-
     const updateFilterTodolistHandler = useCallback((filterName: FilterValuesType) => {
         dispatch(updateTodolistThunk(props.id, 'filter', filterName))
     }, [dispatch, props.id])
